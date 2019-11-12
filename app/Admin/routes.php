@@ -13,5 +13,7 @@ Route::group([
     $router->get('/', 'HomeController@index');
     // 用户
     $router->get('users', 'UsersController@index');
+    // 商品
+    $router->get('products', 'ProductsController@index');
 
 });
