@@ -11,5 +11,7 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index');
+    // 用户
+    $router->get('users', 'UsersController@index');
 
 });
