@@ -29,14 +29,21 @@
       </div>
     </form>
     <!-- 筛选组件结束 -->
+
     <div class="row products-list">
       @foreach($products as $product)
         <div class="col-3 product-item">
           <div class="product-content">
             <div class="top">
-              <div class="img"><img src="{{ $product->image_url }}" alt=""></div>
+              <div class="img">
+                <a href="{{ route('products.show', ['product' => $product->id]) }}">
+                  <img src="{{ $product->image_url }}" alt="">
+                </a>
+              </div>
               <div class="price"><b>￥</b>{{ $product->price }}</div>
-              <div class="title">{{ $product->title }}</div>
+              <div class="title">
+                <a href="{{ route('products.show', ['product' => $product->id]) }}">{{ $product->title }}</a>
+              </div>
             </div>
             <div class="bottom">
               <div class="sold_count">销量 <span>{{ $product->sold_count }}笔</span></div>
