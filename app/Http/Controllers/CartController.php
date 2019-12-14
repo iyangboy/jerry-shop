@@ -12,9 +12,12 @@ class CartController extends Controller
     // 购物车主页列表
     public function index(Request $request)
     {
+        // 商品
         $cartItems = $request->user()->cartItems()->with(['productSku.product'])->get();
+        // 地址项
+        $addresses = $request->user()->addresses()->orderBy('last_used_at', 'desc')->get();
 
-        return view('cart.index', ['cartItems' => $cartItems]);
+        return view('cart.index', ['cartItems' => $cartItems, 'addresses' => $addresses]);
     }
 
     // 添加到购物车
