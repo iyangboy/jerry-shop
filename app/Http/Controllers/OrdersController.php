@@ -9,6 +9,7 @@ use App\Models\ProductSku;
 use App\Models\UserAddress;
 use App\Models\Order;
 use App\Services\CartService;
+use App\Services\OrderService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -27,8 +28,14 @@ class OrdersController extends Controller
         return view('orders.index', ['orders' => $orders]);
     }
 
-    public function store(OrderRequest $request, CartService $cartService)
+    public function store(OrderRequest $request, OrderService $orderService)
     {
+        $user    = $request->user();
+        $address = UserAddress::find($request->input('address_id'));
+
+        return $orderService->store($user, $address, $request->input('remark'), $request->input('items'));
+
+        /*
         $user  = $request->user();
         // 开启一个数据库事务
         $order = \DB::transaction(function () use ($user, $request, $cartService) {
@@ -88,6 +95,7 @@ class OrdersController extends Controller
         $this->dispatch(new CloseOrder($order, config('app.order_ttl')));
 
         return $order;
+        */
     }
 
     // 订单详情
