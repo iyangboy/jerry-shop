@@ -31,4 +31,14 @@ Route::group([
 
     // 优惠券
     $router->get('coupon_codes', 'CouponCodesController@index');
+    // 优惠券-新增
+    $router->get('coupon_codes/create', 'CouponCodesController@create');
+    // 优惠券-新增-提交
+    $router->post('coupon_codes', 'CouponCodesController@store');
+    // 优惠券-编辑
+    $router->get('coupon_codes/{id}/edit', 'CouponCodesController@edit');
+    // 优惠券-编辑-提交
+    $router->put('coupon_codes/{id}', 'CouponCodesController@update');
+    // 优惠券-删除
+    $router->delete('coupon_codes/{id}', 'CouponCodesController@destroy');
 });
