@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersSeeder::class);
         // 地址
         $this->call(UserAddressesSeeder::class);
+        // 分类
+        $this->call(CategoriesSeeder::class);
         // 商品
         $this->call(ProductsSeeder::class);
         // 优惠券
