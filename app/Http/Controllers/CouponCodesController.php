@@ -10,14 +10,14 @@ use Illuminate\Http\Request;
 class CouponCodesController extends Controller
 {
     // 优惠券查询
-    public function show($code)
+    public function show($code, Request $request)
     {
         if (!$record = CouponCode::where('code', $code)->first()) {
             throw new CouponCodeUnavailableException('优惠券不存在');
         }
 
         // 优惠券检查
-        $record->checkAvailable();
+        $record->checkAvailable($request->user());
 
         return $record;
 
