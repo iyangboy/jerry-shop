@@ -78,6 +78,9 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
     // 微信支付
     Route::get('payment/{order}/wechat', 'PaymentController@payByWechat')->name('payment.wechat');
 
+    // 分期付款
+    Route::post('payment/{order}/installment', 'PaymentController@payByInstallment')->name('payment.installment');
+
     // 优惠券-查询
     Route::get('coupon_codes/{code}', 'CouponCodesController@show')->name('coupon_codes.show');
 });
