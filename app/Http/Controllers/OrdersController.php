@@ -6,6 +6,7 @@ use App\Exceptions\CouponCodeUnavailableException;
 use App\Exceptions\InvalidRequestException;
 use App\Events\OrderReviewed;
 use App\Http\Requests\ApplyRefundRequest;
+use App\Http\Requests\CrowdFundingOrderRequest;
 use App\Http\Requests\OrderRequest;
 use App\Http\Requests\SendReviewRequest;
 use App\Jobs\CloseOrder;
@@ -48,68 +49,17 @@ class OrdersController extends Controller
         }
 
         return $orderService->store($user, $address, $request->input('remark'), $request->input('items'), $coupon);
+    }
 
-        /*
-        $user  = $request->user();
-        // 开启一个数据库事务
-        $order = \DB::transaction(function () use ($user, $request, $cartService) {
-            $address = UserAddress::find($request->input('address_id'));
-            // 更新此地址的最后使用时间
-            $address->update(['last_used_at' => Carbon::now()]);
-            // 创建一个订单
-            $order   = new Order([
-                'address'      => [ // 将地址信息放入订单中
-                    'address'       => $address->full_address,
-                    'zip'           => $address->zip,
-                    'contact_name'  => $address->contact_name,
-                    'contact_phone' => $address->contact_phone,
-                ],
-                'remark'       => $request->input('remark'),
-                'total_amount' => 0,
-            ]);
-            // 订单关联到当前用户
-            $order->user()->associate($user);
-            // 写入数据库
-            $order->save();
+    // 众筹商品下单请求
+    public function crowdfunding(CrowdFundingOrderRequest $request, OrderService $orderService)
+    {
+        $user    = $request->user();
+        $sku     = ProductSku::find($request->input('sku_id'));
+        $address = UserAddress::find($request->input('address_id'));
+        $amount  = $request->input('amount');
 
-            $totalAmount = 0;
-            $items       = $request->input('items');
-            // 遍历用户提交的 SKU
-            foreach ($items as $data) {
-                $sku  = ProductSku::find($data['sku_id']);
-                // 创建一个 OrderItem 并直接与当前订单关联
-                $item = $order->items()->make([
-                    'amount' => $data['amount'],
-                    'price'  => $sku->price,
-                ]);
-                $item->product()->associate($sku->product_id);
-                $item->productSku()->associate($sku);
-                $item->save();
-                $totalAmount += $sku->price * $data['amount'];
-
-                // 减库存
-                if ($sku->decreaseStock($data['amount']) <= 0) {
-                    throw new InvalidRequestException('该商品库存不足');
-                }
-            }
-
-            // 更新订单总金额
-            $order->update(['total_amount' => $totalAmount]);
-
-            // 将下单的商品从购物车中移除
-            // $skuIds = collect($items)->pluck('sku_id');
-            // $user->cartItems()->whereIn('product_sku_id', $skuIds)->delete();
-            $skuIds = collect($request->input('items'))->pluck('sku_id')->all();
-            $cartService->remove($skuIds);
-
-            return $order;
-        });
-
-        // 创建延迟任务（关闭未支付订单）需要 redis 服务
-        $this->dispatch(new CloseOrder($order, config('app.order_ttl')));
-
-        return $order;
-        */
+        return $orderService->crowdfunding($user, $address, $sku, $amount);
     }
 
     // 订单详情
@@ -214,4 +164,5 @@ class OrdersController extends Controller
 
         return $order;
     }
+
 }
