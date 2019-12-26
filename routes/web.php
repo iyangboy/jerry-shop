@@ -85,11 +85,19 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
     // 分期付款-详情
     Route::get('installments/{installment}', 'InstallmentsController@show')->name('installments.show');
 
+    // 分期付款
+    Route::get('installments/{installment}/alipay', 'InstallmentsController@payByAlipay')->name('installments.alipay');
+    // 分期付款-前端回调
+    Route::get('installments/alipay/return', 'InstallmentsController@alipayReturn')->name('installments.alipay.return');
+
     // 优惠券-查询
     Route::get('coupon_codes/{code}', 'CouponCodesController@show')->name('coupon_codes.show');
 });
 // 支付宝支付-服务器端回调
 Route::post('payment/alipay/notify', 'PaymentController@alipayNotify')->name('payment.alipay.notify');
+// 支付宝支付-服务器端回调
+Route::post('installments/alipay/notify', 'InstallmentsController@alipayNotify')->name('installments.alipay.notify');
+
 // 微信支付-服务器端回调
 Route::post('payment/wechat/notify', 'PaymentController@wechatNotify')->name('payment.wechat.notify');
 // 微信退款-回调
