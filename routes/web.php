@@ -82,6 +82,8 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
     Route::post('payment/{order}/installment', 'PaymentController@payByInstallment')->name('payment.installment');
     // 分期付款-列表
     Route::get('installments', 'InstallmentsController@index')->name('installments.index');
+    // 分期付款-详情
+    Route::get('installments/{installment}', 'InstallmentsController@show')->name('installments.show');
 
     // 优惠券-查询
     Route::get('coupon_codes/{code}', 'CouponCodesController@show')->name('coupon_codes.show');
