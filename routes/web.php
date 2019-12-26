@@ -105,6 +105,8 @@ Route::post('installments/wechat/notify', 'InstallmentsController@wechatNotify')
 Route::post('payment/wechat/notify', 'PaymentController@wechatNotify')->name('payment.wechat.notify');
 // 微信退款-回调
 Route::post('payment/wechat/refund_notify', 'PaymentController@wechatRefundNotify')->name('payment.wechat.refund_notify');
+// 微信分期退款-回调
+Route::post('installments/wechat/refund_notify', 'InstallmentsController@wechatRefundNotify')->name('installments.wechat.refund_notify');
 
 // 产品详情
 Route::get('products/{product}', 'ProductsController@show')->name('products.show');
